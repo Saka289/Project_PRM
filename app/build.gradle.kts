@@ -4,7 +4,7 @@ plugins {
 
 android {
     namespace = "com.example.projectprm"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.example.projectprm"
@@ -26,9 +26,15 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+
+    buildFeatures {
+        viewBinding = true
+    }
 }
 
 dependencies {
+    //fix duplicate class
+    implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.8.0"))
 
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.9.0")
