@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FavouriteActivity">
+    tools:context=".FavouriteActivity"
+    >
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -14,7 +15,8 @@
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="2dp">
 
         <ImageButton
             android:id="@+id/backBtnFA"
@@ -25,7 +27,8 @@
             android:padding="5dp"
             android:src="@drawable/back_icon"
             app:tint="@color/white"
-            tools:ignore="TouchTargetSizeCheck" />
+            tools:ignore="TouchTargetSizeCheck"
+            />
 
         <TextView
             android:layout_width="match_parent"

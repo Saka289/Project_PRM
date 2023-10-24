@@ -1,19 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
 
-    <style name="Theme.ProjectPRM" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
-        <item name="colorPrimary">@color/purple_500</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
-        <item name="colorOnPrimary">@color/white</item>
+    <style name="Base.Theme.ProjectPRM" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your dark theme here. -->
+        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
 
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_700</item>
-        <item name="colorOnSecondary">@color/black</item>
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
-    </style>
-
-    <style name="splash_screen" parent="Theme.MaterialComponents.Light.NoActionBar" >
-        <item name="android:windowBackground">@drawable/splash_screen</item>
+        <item name="android:forceDarkAllowed">false</item>
     </style>
 
     <!-- Theme for Activities -->
@@ -27,6 +19,7 @@
         <item name="colorSecondaryVariant">@color/teal_700</item>
         <item name="colorOnSecondary">@color/black</item>
         <item name="android:statusBarColor" tools:targetApi="l">@color/cool_pink</item>
+        <item name="android:forceDarkAllowed">false</item>
     </style>
 
     <!-- Theme for Navigation Drawer -->
@@ -40,6 +33,6 @@
         <item name="colorSecondaryVariant">@color/teal_700</item>
         <item name="colorOnSecondary">@color/black</item>
         <item name="android:statusBarColor" tools:targetApi="l">@color/cool_pink</item>
+        <item name="android:forceDarkAllowed">false</item>
     </style>
-
 </resources>

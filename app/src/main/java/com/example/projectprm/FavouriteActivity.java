@@ -13,7 +13,7 @@ public class FavouriteActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTheme(R.style.Theme_ProjectPRM);
+        setTheme(R.style.coolPink);
         favouriteBinding = ActivityFavouriteBinding.inflate(getLayoutInflater());
         setContentView(favouriteBinding.getRoot());
     }

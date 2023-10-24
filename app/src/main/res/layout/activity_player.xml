@@ -22,7 +22,8 @@
             android:background="@android:color/transparent"
             android:contentDescription="@string/back_btn"
             android:src="@drawable/back_icon"
-            app:tint="@color/black" />
+            app:tint="@color/black"
+            android:padding="5dp"/>
 
         <TextView
             android:layout_width="0dp"
@@ -47,6 +48,7 @@
     </LinearLayout>
 
     <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/songImgPA"
         android:layout_width="250dp"
         android:layout_height="250dp"
         android:layout_margin="10dp"
@@ -56,6 +58,7 @@
         app:strokeWidth="5dp" />
 
     <TextView
+        android:id="@+id/songNamePA"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="20dp"
@@ -74,6 +77,7 @@
         android:layout_weight="1">
 
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/previousBtnPA"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:icon="@drawable/previous_icon"
@@ -81,6 +85,7 @@
             tools:ignore="SpeakableTextPresentCheck"/>
 
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/playPauseBtnPA"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="25dp"
@@ -92,6 +97,7 @@
             tools:ignore="SpeakableTextPresentCheck"/>
 
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/nextBtnPA"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:icon="@drawable/next_icon"
