@@ -1,5 +1,6 @@
 package com.example.projectprm;
 
+import static com.example.projectprm.Music.formatDuration;
 import static com.example.projectprm.Music.getImgArt;
 import static com.example.projectprm.PlayerActivity.musicListPA;
 import static com.example.projectprm.PlayerActivity.musicService;
@@ -15,7 +16,9 @@ import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.media.session.MediaSession;
 import android.os.Binder;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
@@ -31,6 +34,10 @@ public class MusicService extends Service {
     public MyBinder myBinder = new MyBinder();
     public MediaPlayer mediaPlayer = null;
     public MediaSessionCompat mediaSession;
+
+    Handler handler = new Handler(Looper.getMainLooper());
+
+    private Runnable runnable;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -137,6 +144,22 @@ public class MusicService extends Service {
 
         playerBinding.playPauseBtnPA.setIconResource(R.drawable.pause_icon);
         musicService.showNotification(R.drawable.pause_icon);
+        playerBinding.tvSeekBarStart.setText(formatDuration(mediaPlayer.getCurrentPosition()));
+        playerBinding.tvSeekBarEnd.setText(formatDuration(mediaPlayer.getDuration()));
+        playerBinding.seekBarPA.setProgress(0);
+        playerBinding.seekBarPA.setMax(mediaPlayer.getDuration());
+    }
+
+    public void seekBarSetup() {
+        runnable = new Runnable() {
+            @Override
+            public void run() {
+                playerBinding.tvSeekBarStart.setText(formatDuration(mediaPlayer.getCurrentPosition()));
+                playerBinding.seekBarPA.setProgress(mediaPlayer.getCurrentPosition());
+                new Handler(Looper.getMainLooper()).postDelayed(runnable, 200);
+            }
+        };
+        new Handler(Looper.getMainLooper()).postDelayed(runnable, 0);
     }
 
 

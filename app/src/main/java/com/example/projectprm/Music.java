@@ -100,19 +100,32 @@ public class Music {
     }
 
     public static void setSongPosition(boolean increment){
-        if(increment){
-            if(musicListPA.size() - 1 == songPosition){
-                songPosition = 0;
+        if(!PlayerActivity.repeat) {
+            if(increment){
+                if(musicListPA.size() - 1 == songPosition){
+                    songPosition = 0;
+                }else{
+                    ++songPosition;
+                }
             }else{
-                ++songPosition;
-            }
-        }else{
-            if(0 == songPosition){
-                songPosition = musicListPA.size() - 1;
-            }else{
-                --songPosition;
+                if(0 == songPosition){
+                    songPosition = musicListPA.size() - 1;
+                }else{
+                    --songPosition;
+                }
             }
         }
+
     }
+
+    public static void exitApplication(){
+        if(PlayerActivity.musicService != null) {
+            PlayerActivity.musicService.stopForeground(true);
+            PlayerActivity.musicService.mediaPlayer.release();
+            PlayerActivity.musicService = null;
+            System.exit(1);
+        }
+    }
+
 
 }

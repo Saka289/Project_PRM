@@ -44,15 +44,15 @@
 
             <Button
                 android:id="@+id/playlistBtn"
+                style="@style/Widget.AppCompat.Button.Borderless"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:contentDescription="@string/playlist_btn"
-                style="@style/Widget.AppCompat.Button.Borderless"
                 android:drawableTop="@drawable/playlist_icon"
                 android:text="@string/playlist_btn"
-                android:textColor="@color/black"
-                android:textAllCaps="false"/>
+                android:textAllCaps="false"
+                android:textColor="?colorOnPrimary" />
 
         </LinearLayout>
 
@@ -67,7 +67,10 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/musicRV"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:scrollbars="vertical"
+            android:scrollbarThumbVertical="@drawable/scroll_bar_icon"
+            />
 
     </LinearLayout>
 

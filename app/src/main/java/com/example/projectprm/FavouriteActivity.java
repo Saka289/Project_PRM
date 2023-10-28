@@ -1,6 +1,7 @@
 package com.example.projectprm;
 
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -16,5 +17,11 @@ public class FavouriteActivity extends AppCompatActivity {
         setTheme(R.style.coolPink);
         favouriteBinding = ActivityFavouriteBinding.inflate(getLayoutInflater());
         setContentView(favouriteBinding.getRoot());
+        favouriteBinding.backBtnFA.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 }

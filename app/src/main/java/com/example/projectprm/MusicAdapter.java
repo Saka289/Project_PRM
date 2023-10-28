@@ -3,6 +3,8 @@ import static androidx.core.util.TimeUtils.formatDuration;
 
 import android.content.Context;
 import android.content.Intent;
+import android.hardware.usb.UsbEndpoint;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,13 +50,18 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MyHolder> {
         holder.root.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context, PlayerActivity.class);
-                intent.putExtra("index", position);
-                intent.putExtra("class", "MusicAdapter");
-                ContextCompat.startActivity(context, intent, null);
+                if (MainActivity.search) {
+                    sendIntent("MusicAdapterSearch", position);
+                } else {
+                    sendIntent("MusicAdapter", position);
+                }
             }
         });
+
+
     }
+
+
     @Override
     public int getItemCount() {
         return musicList.size();
@@ -91,10 +98,22 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MyHolder> {
         }
 
         public TextView getDuration() {
-            return duration;
+            return   duration;
         }
 
+    }
 
+    public void updateMusicList(ArrayList<Music> searchList) {
+        musicList = new ArrayList<>();
+        musicList.addAll(searchList);
+        notifyDataSetChanged();
+    }
+
+    private void sendIntent( String ref, int position) {
+        Intent intent = new Intent(context, PlayerActivity.class);
+        intent.putExtra("index", position);
+        intent.putExtra("class", ref);
+        ContextCompat.startActivity(context, intent, null);
     }
 }
 

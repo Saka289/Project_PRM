@@ -1,14 +1,21 @@
 package com.example.projectprm;
 
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -19,6 +26,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.projectprm.databinding.ActivityMainBinding;
+import com.google.android.material.navigation.NavigationView;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -34,6 +42,14 @@ public class MainActivity extends AppCompatActivity {
 
     public static ArrayList<Music> MusicListMA;
 
+    int[] currentGradient = {R.drawable.gradient_pink, R.drawable.gradient_blue, R.drawable.gradient_purple, R.drawable.gradient_green, R.drawable.gradient_black};
+
+    int themeIndex = 0;
+    int[] currentTheme = {R.style.coolPink, R.style.coolBlue, R.style.coolPurple, R.style.coolGreen, R.style.coolBlack};
+    int[] currentThemeNav = {R.style.coolPinkNav, R.style.coolBlueNav, R.style.coolPurpleNav, R.style.coolGreenNav, R.style.coolBlackNav};
+    public static ArrayList<Music> musicListSearch;
+
+    public static boolean search = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,7 +64,9 @@ public class MainActivity extends AppCompatActivity {
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
-        if(requestRuntimePermission()){initializeLayout();}
+        if (requestRuntimePermission()) {
+            initializeLayout();
+        }
 
 
         mainBinding.shuffleBtn.setOnClickListener(new View.OnClickListener() {
@@ -56,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, PlayerActivity.class);
                 intent.putExtra("index", 0);
-                intent.putExtra("class","MainActivity");
+                intent.putExtra("class", "MainActivity");
                 startActivity(intent);
             }
         });
@@ -72,42 +90,44 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, PlaylistActivity.class));
             }
         });
+        mainBinding.navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                if (item.getItemId() == R.id.navFeedback) {
+                    Toast.makeText(getApplicationContext(), "Feedback", Toast.LENGTH_SHORT).show();
+                }
+                if (item.getItemId() == R.id.navSettings) {
+                    Toast.makeText(getApplicationContext(), "Settings", Toast.LENGTH_SHORT).show();
+                }
+                if (item.getItemId() == R.id.navAbout) {
+                    Toast.makeText(getApplicationContext(), "About", Toast.LENGTH_SHORT).show();
+                }
+                if (item.getItemId() == R.id.navExit) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                    builder.setTitle("Exit")
+                            .setMessage("DO you want to close this app")
+                            .setPositiveButton("Yes", (dialog, which) -> {
+                                {
+                                    Music.exitApplication();
+                                }
+                            })
+                            .setNegativeButton("No", (dialog, which) -> {
+                                dialog.dismiss();
+                            });
 
-//        mainBinding.navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-//            @Override
-//            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-//                switch (item.getItemId()) {
-//                    case R.id.navSettings:
-//                        startActivity(new Intent(MainActivity.this, SettingsActivity.class));
-//                        return true;
-//                    case R.id.navAbout:
-//                        startActivity(new Intent(MainActivity.this, AboutActivity.class));
-//                        return true;
-//                    case R.id.navExit:
-//                        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(MainActivity.this);
-//                        builder.setTitle("Exit")
-//                                .setMessage("Do you want to close app?")
-//                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-//                                    @Override
-//                                    public void onClick(DialogInterface dialog, int which) {
-//                                        exitApplication();
-//                                    }
-//                                })
-//                                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-//                                    @Override
-//                                    public void onClick(DialogInterface dialog, int which) {
-//                                        dialog.dismiss();
-//                                    }
-//                                });
-//                        AlertDialog customDialog = builder.create();
-//                        customDialog.show();
-//                        setDialogBtnBackground(MainActivity.this, customDialog);
-//                        return true;
-//                    default:
-//                        return false;
-//                }
-//            }
-//        });
+                    Dialog customDialog = builder.create();
+
+                    customDialog.show();
+                    ((AlertDialog) customDialog).getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.RED);
+                    ((AlertDialog) customDialog).getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.RED);
+
+
+
+                // Add your exit confirmation logic here
+                }
+                return true;
+            }
+        });
     }
 
     private boolean requestRuntimePermission() {
@@ -201,5 +221,50 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         return tempList;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if(!PlayerActivity.isPlaying && PlayerActivity.musicService != null) {
+            Music.exitApplication();
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.search_view_menu, menu);
+
+        // For setting gradient
+        LinearLayout linearLayoutNav = findViewById(R.id.linearLayoutNav);
+        linearLayoutNav.setBackgroundResource(currentGradient[themeIndex]);
+
+        MenuItem searchMenuItem = menu.findItem(R.id.searchView);
+        SearchView searchView = (SearchView) searchMenuItem.getActionView();
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (newText != null) {
+                    String userInput = newText.toLowerCase();
+                    musicListSearch = new ArrayList<>();
+                    for (Music song : MusicListMA) {
+                        if (song.getTitle().toLowerCase().contains(userInput)) {
+                            musicListSearch.add(song);
+                        }
+                    }
+                    search = true;
+                    musicAdapter.updateMusicList(musicListSearch);
+                }
+                return true;
+            }
+        });
+
+        return super.onCreateOptionsMenu(menu);
     }
 }

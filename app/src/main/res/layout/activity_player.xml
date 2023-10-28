@@ -16,6 +16,7 @@
         android:layout_weight="1">
 
         <ImageButton
+            android:id="@+id/backBtnPA"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
@@ -114,6 +115,7 @@
         android:layout_weight="1">
 
         <TextView
+            android:id="@+id/tvSeekBarStart"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="@string/start_tv"
@@ -122,12 +124,14 @@
             android:textSize="15sp" />
 
         <androidx.appcompat.widget.AppCompatSeekBar
+            android:id="@+id/seekBarPA"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             tools:ignore="NestedWeights" />
 
         <TextView
+            android:id="@+id/tvSeekBarEnd"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="@string/end_tv"
@@ -143,6 +147,7 @@
         android:layout_weight="1">
 
         <ImageButton
+            android:id="@+id/repeatBtnPA"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -153,6 +158,7 @@
             tools:ignore="NestedWeights,TouchTargetSizeCheck" />
 
         <ImageButton
+            android:id="@+id/equalizerBtnPA"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -163,6 +169,7 @@
             tools:ignore="TouchTargetSizeCheck" />
 
         <ImageButton
+            android:id="@+id/timerBtnPA"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -173,6 +180,7 @@
             tools:ignore="TouchTargetSizeCheck" />
 
         <ImageButton
+            android:id="@+id/shareBtnPA"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
