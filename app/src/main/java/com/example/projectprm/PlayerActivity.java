@@ -232,7 +232,16 @@ public class PlayerActivity extends AppCompatActivity implements ServiceConnecti
         songPosition = getIntent().getIntExtra("index",0);
         String songPosition = getIntent().getStringExtra("class");
         switch (songPosition) {
+            case "NowPlaying":
+                setLayout();
+                playerBinding.tvSeekBarStart.setText(formatDuration(musicService.mediaPlayer.getCurrentPosition()));
+                playerBinding.tvSeekBarEnd.setText(formatDuration(musicService.mediaPlayer.getDuration()));
+                playerBinding.seekBarPA.setProgress(musicService.mediaPlayer.getCurrentPosition());
+                playerBinding.seekBarPA.setMax(musicService.mediaPlayer.getDuration());
             case "MusicAdapter":
+                Intent intent = new Intent(this, MusicService.class);
+                bindService(intent,this,BIND_AUTO_CREATE);
+                startService(intent);
                 musicListPA = new ArrayList<>();
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
                 {
@@ -243,6 +252,9 @@ public class PlayerActivity extends AppCompatActivity implements ServiceConnecti
                 break;
 
             case "MainActivity":
+                intent = new Intent(this, MusicService.class);
+                bindService(intent,this,BIND_AUTO_CREATE);
+                startService(intent);
                 musicListPA = new ArrayList<>();
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                     musicListPA.addAll(MainActivity.MusicListMA);
@@ -252,6 +264,9 @@ public class PlayerActivity extends AppCompatActivity implements ServiceConnecti
 
                 break;
             case "MusicAdapterSearch":
+                intent = new Intent(this, MusicService.class);
+                bindService(intent,this,BIND_AUTO_CREATE);
+                startService(intent);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                     initServiceAndPlaylist(MainActivity.musicListSearch,false, false);
                 }

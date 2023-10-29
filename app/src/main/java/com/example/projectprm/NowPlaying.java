@@ -6,8 +6,10 @@ import static com.example.projectprm.PlayerActivity.musicService;
 import static com.example.projectprm.PlayerActivity.playerBinding;
 import static com.example.projectprm.PlayerActivity.songPosition;
 
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -52,7 +54,15 @@ public class NowPlaying extends Fragment {
                 playMusic();
             }
         });
-
+        binding.getRoot().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(requireContext(), PlayerActivity.class);
+                intent.putExtra("index", PlayerActivity.songPosition);
+                intent.putExtra("class", "NowPlaying");
+                ContextCompat.startActivity(requireContext(), intent, null);
+            }
+        });
         return inflater.inflate(R.layout.fragment_now_playing, container, false);
     }
 
