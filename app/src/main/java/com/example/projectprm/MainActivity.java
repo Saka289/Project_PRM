@@ -167,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
         mainBinding.musicRV.setHasFixedSize(true);
         mainBinding.musicRV.setItemViewCacheSize(13);
         mainBinding.musicRV.setLayoutManager(new LinearLayoutManager(this));
-        musicAdapter = new MusicAdapter(this, MusicListMA);
+        musicAdapter = new MusicAdapter(this, MusicListMA,true);
         mainBinding.musicRV.setAdapter(musicAdapter);
         mainBinding.totalSongs.setText("Total Songs : " + musicAdapter.getItemCount());
     }

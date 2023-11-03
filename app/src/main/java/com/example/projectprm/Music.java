@@ -5,6 +5,10 @@ import static com.example.projectprm.PlayerActivity.songPosition;
 
 import android.media.MediaMetadataRetriever;
 
+import androidx.recyclerview.widget.SortedList;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class Music {
@@ -28,6 +32,19 @@ public class Music {
         this.duration = duration;
         this.path = path;
         this.artUri = artUri;
+    }
+
+    public static class Playlist {
+        String name;
+        ArrayList<Music> playlist;
+        String createdBy;
+        String createdOn;
+
+    }
+
+
+     public static class MusicPlaylist {
+         List<Playlist> ref = new ArrayList<>();
     }
 
     public String getArtUri() {
@@ -127,5 +144,15 @@ public class Music {
         }
     }
 
-
+    public static int favouriteChecker(String id) {
+        PlayerActivity.isFavourite= false;
+        for (int index = 0; index < FavouriteActivity.favouriteSongs.size(); index++) {
+            Music music = FavouriteActivity.favouriteSongs.get(index);
+            if (id.equals(music.getId())) {
+                PlayerActivity.isFavourite = true;
+                return index;
+            }
+        }
+        return -1;
+    }
 }

@@ -1,6 +1,7 @@
 package com.example.projectprm;
 import static androidx.core.util.TimeUtils.formatDuration;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.hardware.usb.UsbEndpoint;
@@ -24,10 +25,14 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MyHolder> {
 
     private Context context;
     private ArrayList<Music> musicList;
+    private boolean playlistDetails;
+    private boolean selectionActivity;
 
-    public MusicAdapter(Context context, ArrayList<Music> musicList) {
+    public MusicAdapter(Context context, ArrayList<Music> musicList, boolean playlistDetails) {
         this.context = context;
         this.musicList = musicList;
+        this.playlistDetails = playlistDetails;
+
     }
 
     @Override
@@ -37,7 +42,7 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MyHolder> {
     }
 
     @Override
-    public void onBindViewHolder(MyHolder holder, int position) {
+    public void onBindViewHolder(MyHolder holder, @SuppressLint("RecyclerView") int position) {
 
         holder.title.setText(musicList.get(position).getTitle());
         holder.album.setText(musicList.get(position).getAlbum());
@@ -47,17 +52,40 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MyHolder> {
                 .load(musicList.get(position).getArtUri())
                 .apply(RequestOptions.placeholderOf(R.drawable.music_player_icon_slash_screen).centerCrop())
                 .into(holder.image);
-        holder.root.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (MainActivity.search) {
-                    sendIntent("MusicAdapterSearch", position);
-                } else {
-                    sendIntent("MusicAdapter", position);
-                }
-            }
-        });
 
+
+        if (playlistDetails) {
+            holder.root.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    sendIntent("PlaylistDetailsAdapter", position);
+                }
+            });
+        } else if (selectionActivity) {
+//            holder.root.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    if (addSong(musicList.get(position))) {
+//                        holder.root.setBackgroundColor(ContextCompat.getColor(context, R.color.cool_pink));
+//                    } else {
+//                        holder.root.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
+//                    }
+//                }
+//            });
+        } else {
+            holder.root.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (MainActivity.search) {
+                        sendIntent("MusicAdapterSearch", position);
+                    } else if (musicList.get(position).getId() == PlayerActivity.nowPlayingId) {
+                        sendIntent("NowPlaying", PlayerActivity.songPosition);
+                    } else {
+                        sendIntent("MusicAdapter", position);
+                    }
+                }
+            });
+        }
 
     }
 

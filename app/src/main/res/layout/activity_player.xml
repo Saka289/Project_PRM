@@ -37,9 +37,10 @@
             android:textSize="20sp" />
 
         <ImageButton
+            android:id="@+id/favouriteBtnPA"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="5dp"
+            android:layout_marginEnd="15dp"
             android:background="@android:color/transparent"
             android:contentDescription="@string/favourites_btn"
             android:src="@drawable/favourite_empty_icon"

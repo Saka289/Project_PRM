@@ -4,12 +4,17 @@ import android.os.Bundle;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.example.projectprm.databinding.ActivityFavouriteBinding;
+
+import java.util.ArrayList;
 
 public class FavouriteActivity extends AppCompatActivity {
 
     private ActivityFavouriteBinding favouriteBinding;
+    private FavouriteAdapter adapter;
+    public static ArrayList<Music> favouriteSongs = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,5 +28,12 @@ public class FavouriteActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        favouriteBinding.favouriteRV.setHasFixedSize(true);
+        favouriteBinding.favouriteRV.setItemViewCacheSize(13);
+
+        favouriteBinding.favouriteRV.setLayoutManager(new GridLayoutManager(this, 4));
+        adapter = new FavouriteAdapter(this,favouriteSongs );
+        favouriteBinding.favouriteRV.setAdapter(adapter);
     }
 }

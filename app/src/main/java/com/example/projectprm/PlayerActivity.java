@@ -1,5 +1,6 @@
 package com.example.projectprm;
 
+import static com.example.projectprm.Music.favouriteChecker;
 import static com.example.projectprm.Music.formatDuration;
 import static com.example.projectprm.Music.setSongPosition;
 
@@ -52,6 +53,8 @@ public class PlayerActivity extends AppCompatActivity implements ServiceConnecti
 
     public static String nowPlayingId = "";
 
+    public static Boolean isFavourite = false;
+    public static int fIndex=-1;
 
 
     @Override
@@ -188,9 +191,26 @@ public class PlayerActivity extends AppCompatActivity implements ServiceConnecti
                 startActivity(Intent.createChooser(shareIntent, "Sharing Music File!!"));
             }
         });
+        playerBinding.favouriteBtnPA.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fIndex = favouriteChecker(musicListPA.get(songPosition).getId());
+                if (isFavourite) {
+                    isFavourite = false;
+                    playerBinding.favouriteBtnPA.setImageResource(R.drawable.favourite_empty_icon);
+                    FavouriteActivity.favouriteSongs.remove(fIndex);
+                } else {
+                    isFavourite = true;
+                    playerBinding.favouriteBtnPA.setImageResource(R.drawable.favourite_icon);
+                    FavouriteActivity.favouriteSongs.add(musicListPA.get(songPosition));
+                }
+
+            }
+        });
     }
 
     private void setLayout(){
+        fIndex = favouriteChecker(musicListPA.get(songPosition).getId());
         Glide.with(this)
                 .load(musicListPA.get(songPosition).getArtUri())
                 .apply(RequestOptions.placeholderOf(R.drawable.music_player_icon_slash_screen).centerCrop())
@@ -198,6 +218,11 @@ public class PlayerActivity extends AppCompatActivity implements ServiceConnecti
         playerBinding.songNamePA.setText(musicListPA.get(songPosition).getTitle());
         if(repeat) playerBinding.repeatBtnPA.setColorFilter(ContextCompat.getColor(PlayerActivity.this, R.color.purple_500));
         if(min15 || min30 || min60) playerBinding.timerBtnPA.setColorFilter(ContextCompat.getColor(PlayerActivity.this, R.color.purple_500));
+        if (isFavourite) {
+            playerBinding.favouriteBtnPA.setImageResource(R.drawable.favourite_icon);
+        } else {
+            playerBinding.favouriteBtnPA.setImageResource(R.drawable.favourite_empty_icon);
+        }
     }
 
     private void createMediaPlayer(){
@@ -271,7 +296,18 @@ public class PlayerActivity extends AppCompatActivity implements ServiceConnecti
                     initServiceAndPlaylist(MainActivity.musicListSearch,false, false);
                 }
                 break;
+            case "PlaylistDetailsAdapter" :
+                intent = new Intent(this, MusicService.class);
+                bindService(intent,this,BIND_AUTO_CREATE);
+                startService(intent);
+                musicListPA = new ArrayList<>();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
+                {
+                    musicListPA.addAll(PlaylistActivity.musicPlaylist.ref.get(PlaylistDetails.currentPlaylistPos).playlist);
+                }
+                setLayout();
 
+                break;
         }
     }
     private void playMusic(){
