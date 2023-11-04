@@ -31,6 +31,7 @@ public class SettingsActivity extends AppCompatActivity {
         binding = ActivitySettingsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         getSupportActionBar().setTitle("Settings");
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             switch (MainActivity.themeIndex) {
                 case 0:
@@ -79,7 +80,7 @@ public class SettingsActivity extends AppCompatActivity {
 
             AlertDialog customDialog = builder.create();
             customDialog.show();
-
+            setDialogBtnBackground(this, customDialog);
         });
 
 
@@ -117,8 +118,6 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
-
-
     private void setDialogBtnBackground(Context context, AlertDialog dialog) {
         // Setting button text color
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(
@@ -127,7 +126,6 @@ public class SettingsActivity extends AppCompatActivity {
         dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(
                 MaterialColors.getColor(context, R.attr.dialogTextColor, Color.WHITE)
         );
-
 
         // Setting button background color
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setBackgroundColor(

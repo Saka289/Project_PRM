@@ -4,7 +4,6 @@ import static com.example.projectprm.Music.favouriteChecker;
 import static com.example.projectprm.Music.formatDuration;
 import static com.example.projectprm.Music.setSongPosition;
 
-import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.ComponentName;
 import android.content.Context;
@@ -19,7 +18,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
@@ -63,7 +61,7 @@ public class PlayerActivity extends AppCompatActivity implements ServiceConnecti
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            setTheme(MainActivity.currentThemeNav[MainActivity.themeIndex]);
+            setTheme(MainActivity.currentTheme[MainActivity.themeIndex]);
         }
 
         playerBinding = ActivityPlayerBinding.inflate(getLayoutInflater());

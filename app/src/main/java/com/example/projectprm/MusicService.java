@@ -7,7 +7,6 @@ import static com.example.projectprm.PlayerActivity.musicService;
 import static com.example.projectprm.PlayerActivity.playerBinding;
 import static com.example.projectprm.PlayerActivity.songPosition;
 
-import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
@@ -15,7 +14,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.media.session.MediaSession;
 import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
@@ -24,11 +22,9 @@ import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 
-import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
 import java.io.IOException;
-import java.security.Provider;
 
 public class MusicService extends Service implements AudioManager.OnAudioFocusChangeListener {
 
@@ -37,7 +33,6 @@ public class MusicService extends Service implements AudioManager.OnAudioFocusCh
     public MediaSessionCompat mediaSession;
     public AudioManager audioManager;
     Handler handler = new Handler(Looper.getMainLooper());
-
     private Runnable runnable;
 
     @Override

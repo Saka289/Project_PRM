@@ -21,7 +21,9 @@ public class SelectionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
   
         binding = ActivitySelectionBinding.inflate(getLayoutInflater());
-        setTheme(R.style.coolPink);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            setTheme(MainActivity.currentTheme[MainActivity.themeIndex]);
+        }
         setContentView(binding.getRoot());
         binding.selectionRV.setItemViewCacheSize(10);
         binding.selectionRV.setHasFixedSize(true);

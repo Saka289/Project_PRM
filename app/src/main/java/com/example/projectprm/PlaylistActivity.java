@@ -33,9 +33,11 @@ public class PlaylistActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            setTheme(MainActivity.currentThemeNav[MainActivity.themeIndex]);
+            setTheme(MainActivity.currentTheme[MainActivity.themeIndex]);
         }
+
         playlistBinding = ActivityPlaylistBinding.inflate(getLayoutInflater());
         setContentView(playlistBinding.getRoot());
 //        ArrayList<String> list=new ArrayList<String>();

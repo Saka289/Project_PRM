@@ -3,9 +3,14 @@ package com.example.projectprm;
 import static com.example.projectprm.PlayerActivity.musicListPA;
 import static com.example.projectprm.PlayerActivity.songPosition;
 
+import android.content.Context;
+import android.graphics.Color;
 import android.media.MediaMetadataRetriever;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.SortedList;
+
+import com.google.android.material.color.MaterialColors;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -157,6 +162,10 @@ public class Music {
         }
         return -1;
     }
+
+
+
+
     public static ArrayList<Music> checkPlaylist(ArrayList<Music> playlist) {
         Iterator<Music> iterator = playlist.iterator();
         while (iterator.hasNext()) {
@@ -167,5 +176,25 @@ public class Music {
             }
         }
         return playlist;
+    }
+
+
+    public void setDialogBtnBackground(Context context, AlertDialog dialog) {
+        // Setting button text color
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(
+                MaterialColors.getColor(context, R.attr.dialogTextColor, Color.WHITE)
+        );
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(
+                MaterialColors.getColor(context, R.attr.dialogTextColor, Color.WHITE)
+        );
+
+
+        // Setting button background color
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setBackgroundColor(
+                MaterialColors.getColor(context, R.attr.dialogBtnBackground, Color.RED)
+        );
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setBackgroundColor(
+                MaterialColors.getColor(context, R.attr.dialogBtnBackground, Color.RED)
+        );
     }
 }

@@ -4,19 +4,15 @@ import static com.example.projectprm.Music.exitApplication;
 import static com.example.projectprm.Music.setSongPosition;
 import static com.example.projectprm.PlayerActivity.musicListPA;
 import static com.example.projectprm.PlayerActivity.musicService;
-import static com.example.projectprm.PlayerActivity.nowPlayingId;
 import static com.example.projectprm.PlayerActivity.playerBinding;
 import static com.example.projectprm.PlayerActivity.songPosition;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-
-import java.io.IOException;
 
 public class NotificationReceiver extends BroadcastReceiver {
     @Override

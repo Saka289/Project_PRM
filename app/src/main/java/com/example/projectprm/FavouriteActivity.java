@@ -24,7 +24,7 @@ public class FavouriteActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            setTheme(MainActivity.currentThemeNav[MainActivity.themeIndex]);
+            setTheme(MainActivity.currentTheme[MainActivity.themeIndex]);
         }
         favouriteBinding = ActivityFavouriteBinding.inflate(getLayoutInflater());
         setContentView(favouriteBinding.getRoot());
