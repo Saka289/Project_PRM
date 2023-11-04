@@ -29,7 +29,9 @@
             android:layout_marginEnd="10dp"
             app:icon="@drawable/next_icon"
             app:iconSize="40dp"
-            app:iconTint="@color/white" />
+            app:iconTint="@color/white"
+            android:backgroundTint="?attr/themeColor"
+            />
 
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:id="@+id/playPauseBtnNP"
@@ -40,7 +42,9 @@
             android:layout_toStartOf="@id/nextBtnNP"
             app:icon="@drawable/play_icon"
             app:iconSize="40dp"
-            app:iconTint="@color/white" />
+            app:iconTint="@color/white"
+            android:backgroundTint="?attr/themeColor"
+            />
 
         <TextView
             android:id="@+id/songNameNP"
