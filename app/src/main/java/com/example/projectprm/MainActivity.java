@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
@@ -55,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
 
     int[] currentGradient = {R.drawable.gradient_pink, R.drawable.gradient_blue, R.drawable.gradient_purple, R.drawable.gradient_green, R.drawable.gradient_black};
 
-    static int themeIndex = 0;
+     static int themeIndex = 4;
     static int[] currentTheme = {R.style.coolPink, R.style.coolBlue, R.style.coolPurple, R.style.coolGreen, R.style.coolBlack};
     static int[] currentThemeNav = {R.style.coolPinkNav, R.style.coolBlueNav, R.style.coolPurpleNav, R.style.coolGreenNav, R.style.coolBlackNav};
     public static ArrayList<Music> musicListSearch;
@@ -79,10 +80,14 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences themeEditor = getSharedPreferences("THEMES", MODE_PRIVATE);
         int themeIndex = themeEditor.getInt("themeIndex", 0);
 
-
         setTheme(currentThemeNav[themeIndex]);
+
         mainBinding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(mainBinding.getRoot());
+        if (themeIndex == 4 && (getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_NO) {
+            Toast.makeText(this, "Black Theme Works Best in Dark Mode!!", Toast.LENGTH_LONG).show();
+        }
+
 
         toggle = new ActionBarDrawerToggle(this, mainBinding.getRoot(), R.string.open, R.string.close);
         mainBinding.getRoot().addDrawerListener(toggle);
@@ -135,7 +140,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 if (item.getItemId() == R.id.navFeedback) {
-                    Toast.makeText(getApplicationContext(), "Feedback", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(MainActivity.this, FeedbackActivity.class);
+                    startActivity(intent);
                 }
 
                 // Chuyển sang SettingsActivity khi nhấn vào R.id.navSettings
@@ -303,15 +309,6 @@ public class MainActivity extends AppCompatActivity {
             MusicListMA = getAllAudio();
             musicAdapter.updateMusicList(MusicListMA);
         }
-    }
-
-        SharedPreferences.Editor editor = getSharedPreferences("FAVOURITES", MODE_PRIVATE).edit();
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        String jsonString = gsonBuilder.create().toJson(FavouriteActivity.favouriteSongs);
-        editor.putString("FavouriteSongs", jsonString);
-        String jsonStringPlaylist = gsonBuilder.create().toJson(PlaylistActivity.musicPlaylist);
-        editor.putString("MusicPlaylist", jsonStringPlaylist);
-        editor.apply();
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
