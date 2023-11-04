@@ -7,9 +7,11 @@ import static com.example.projectprm.Music.setSongPosition;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.audiofx.AudioEffect;
 import android.net.Uri;
@@ -63,6 +65,7 @@ public class PlayerActivity extends AppCompatActivity implements ServiceConnecti
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             setTheme(MainActivity.currentThemeNav[MainActivity.themeIndex]);
         }
+
         playerBinding = ActivityPlayerBinding.inflate(getLayoutInflater());
         setContentView(playerBinding.getRoot());
         Intent intent = new Intent(this, MusicService.class);
@@ -308,7 +311,30 @@ public class PlayerActivity extends AppCompatActivity implements ServiceConnecti
                     musicListPA.addAll(PlaylistActivity.musicPlaylist.ref.get(PlaylistDetails.currentPlaylistPos).playlist);
                 }
                 setLayout();
-
+                break;
+            case "PlaylistDetailsShuffle" :
+                intent = new Intent(this, MusicService.class);
+                bindService(intent,this,BIND_AUTO_CREATE);
+                startService(intent);
+                musicListPA = new ArrayList<>();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
+                {
+                    musicListPA.addAll(PlaylistActivity.musicPlaylist.ref.get(PlaylistDetails.currentPlaylistPos).playlist);
+                }
+                Collections.shuffle(musicListPA);
+                setLayout();
+                break;
+            case "FavouriteShuffle" :
+                intent = new Intent(this, MusicService.class);
+                bindService(intent,this,BIND_AUTO_CREATE);
+                startService(intent);
+                musicListPA = new ArrayList<>();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
+                {
+                    musicListPA.addAll(FavouriteActivity.favouriteSongs);
+                }
+                Collections.shuffle(musicListPA);
+                setLayout();
                 break;
         }
     }
@@ -343,6 +369,8 @@ public class PlayerActivity extends AppCompatActivity implements ServiceConnecti
         musicService = binder.currentService();
         createMediaPlayer();
         musicService.seekBarSetup();
+        musicService.audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        musicService.audioManager.requestAudioFocus(musicService, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
 
     }
 

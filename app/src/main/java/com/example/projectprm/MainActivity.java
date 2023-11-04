@@ -16,7 +16,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
+
 import androidx.appcompat.widget.SearchView;
+
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -31,9 +33,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.projectprm.databinding.ActivityMainBinding;
 import com.google.android.material.navigation.NavigationView;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.File;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.List;
 
 @RequiresApi(Build.VERSION_CODES.R)
 
@@ -86,6 +92,21 @@ public class MainActivity extends AppCompatActivity {
         }
         if (requestRuntimePermission()) {
             initializeLayout();
+            FavouriteActivity.favouriteSongs = new ArrayList<>();
+            SharedPreferences editor = getSharedPreferences("FAVOURITES", MODE_PRIVATE);
+            String jsonString = editor.getString("FavouriteSongs", null);
+            Type typeToken = new TypeToken<ArrayList<Music>>() {
+            }.getType();
+            if (!jsonString.isEmpty() && jsonString != null) {
+                ArrayList<Music> data = new GsonBuilder().create().fromJson(jsonString, typeToken);
+                FavouriteActivity.favouriteSongs.addAll(data);
+            }
+            PlaylistActivity.musicPlaylist = new Music.MusicPlaylist();
+            String jsonStringPlaylist = editor.getString("MusicPlaylist", null);
+            if (jsonStringPlaylist != null) {
+                Music.MusicPlaylist dataPlaylist = new GsonBuilder().create().fromJson(jsonStringPlaylist, Music.MusicPlaylist.class);
+                PlaylistActivity.musicPlaylist = dataPlaylist;
+            }
         }
 
 
@@ -148,8 +169,7 @@ public class MainActivity extends AppCompatActivity {
                     ((AlertDialog) customDialog).getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.RED);
 
 
-
-                // Add your exit confirmation logic here
+                    // Add your exit confirmation logic here
                 }
                 return true;
             }
@@ -185,7 +205,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void initializeLayout(){
+    private void initializeLayout() {
         MusicListMA = getAllAudio();
 
         search = false;
@@ -196,13 +216,13 @@ public class MainActivity extends AppCompatActivity {
         mainBinding.musicRV.setHasFixedSize(true);
         mainBinding.musicRV.setItemViewCacheSize(13);
         mainBinding.musicRV.setLayoutManager(new LinearLayoutManager(this));
-        musicAdapter = new MusicAdapter(this, MusicListMA,true);
+        musicAdapter = new MusicAdapter(this, MusicListMA, true, false);
         mainBinding.musicRV.setAdapter(musicAdapter);
         mainBinding.totalSongs.setText("Total Songs : " + musicAdapter.getItemCount());
     }
 
 
-    private ArrayList<Music> getAllAudio(){
+    private ArrayList<Music> getAllAudio() {
         ArrayList<Music> tempList = new ArrayList<>();
         String selection = MediaStore.Audio.Media.IS_MUSIC + " != 0";
         String[] projection = new String[]{
@@ -224,7 +244,7 @@ public class MainActivity extends AppCompatActivity {
                 sortingList[sortOrder],
                 null
         );
-        if(cursor != null) {
+        if (cursor != null) {
             if (cursor.moveToFirst()) {
                 do {
                     String titleC = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE));
@@ -233,7 +253,7 @@ public class MainActivity extends AppCompatActivity {
                     String artistC = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST));
                     String pathC = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA));
                     Long durationC = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION));
-                    String albumIdC =  String.valueOf(cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID)));
+                    String albumIdC = String.valueOf(cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID)));
                     Uri uri = Uri.parse("content://media/external/audio/albumart");
                     String artUri = Uri.withAppendedPath(uri, albumIdC).toString();
                     Music music = new Music();
@@ -249,7 +269,7 @@ public class MainActivity extends AppCompatActivity {
                         tempList.add(music);
                     }
                 } while (cursor.moveToNext());
-                    cursor.close();
+                cursor.close();
             }
         }
         return tempList;
@@ -258,7 +278,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if(!PlayerActivity.isPlaying && PlayerActivity.musicService != null) {
+        if (!PlayerActivity.isPlaying && PlayerActivity.musicService != null) {
             Music.exitApplication();
         }
     }
@@ -285,9 +305,14 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
-
-
+        SharedPreferences.Editor editor = getSharedPreferences("FAVOURITES", MODE_PRIVATE).edit();
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        String jsonString = gsonBuilder.create().toJson(FavouriteActivity.favouriteSongs);
+        editor.putString("FavouriteSongs", jsonString);
+        String jsonStringPlaylist = gsonBuilder.create().toJson(PlaylistActivity.musicPlaylist);
+        editor.putString("MusicPlaylist", jsonStringPlaylist);
+        editor.apply();
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.search_view_menu, menu);
