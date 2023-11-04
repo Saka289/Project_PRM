@@ -48,6 +48,13 @@ public class PlaylistActivity extends AppCompatActivity {
         adapter = new PlaylistViewAdapter(this, musicPlaylist.ref);
 
         playlistBinding.playlistRV.setAdapter(adapter);
+
+        playlistBinding.backBtnFA.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         playlistBinding.addPlaylistBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -100,4 +107,9 @@ public class PlaylistActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        adapter.notifyDataSetChanged();
+    }
 }

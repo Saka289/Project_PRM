@@ -13,6 +13,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.session.MediaSession;
 import android.os.Binder;
@@ -29,20 +30,37 @@ import androidx.core.app.NotificationCompat;
 import java.io.IOException;
 import java.security.Provider;
 
-public class MusicService extends Service {
+public class MusicService extends Service implements AudioManager.OnAudioFocusChangeListener {
 
     public MyBinder myBinder = new MyBinder();
     public MediaPlayer mediaPlayer = null;
     public MediaSessionCompat mediaSession;
-
+    public AudioManager audioManager;
     Handler handler = new Handler(Looper.getMainLooper());
 
     private Runnable runnable;
 
     @Override
     public IBinder onBind(Intent intent) {
-        mediaSession = new MediaSessionCompat(getBaseContext(),"My Music");
+        mediaSession = new MediaSessionCompat(getBaseContext(), "My Music");
         return myBinder;
+    }
+
+    @Override
+    public void onAudioFocusChange(int focusChange) {
+        if (focusChange <= 0) {
+            PlayerActivity.playerBinding.playPauseBtnPA.setIconResource(R.drawable.play_icon);
+            NowPlaying.binding.playPauseBtnNP.setIconResource(R.drawable.play_icon);
+            showNotification(R.drawable.play_icon);
+            PlayerActivity.isPlaying = false;
+            musicService.mediaPlayer.pause();
+        } else {
+            PlayerActivity.playerBinding.playPauseBtnPA.setIconResource(R.drawable.pause_icon);
+            NowPlaying.binding.playPauseBtnNP.setIconResource(R.drawable.pause_icon);
+            showNotification(R.drawable.pause_icon);
+            PlayerActivity.isPlaying = true;
+            mediaPlayer.start();
+        }
     }
 
     public class MyBinder extends Binder {
@@ -51,8 +69,15 @@ public class MusicService extends Service {
         }
     }
 
-    public void showNotification(int playPauseBtn){
+    public void showNotification(int playPauseBtn) {
+        Intent intent = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+            intent = new Intent(getBaseContext(), MainActivity.class);
+        }
+        intent.putExtra("index", PlayerActivity.songPosition);
+        intent.putExtra("class", "NowPlaying");
 
+        PendingIntent contextIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
         int flag;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
             flag = PendingIntent.FLAG_IMMUTABLE;
@@ -88,6 +113,7 @@ public class MusicService extends Service {
 
 
         NotificationCompat.Builder notification = new NotificationCompat.Builder(getBaseContext(), (String) ApplicationClass.CHANNEL_ID);
+        notification.setContentIntent(contextIntent);
         notification.setContentTitle(musicListPA.get(songPosition).getTitle());
         notification.setContentText(musicListPA.get(songPosition).getArtist());
         notification.setSmallIcon(R.drawable.playlist_icon);
@@ -102,7 +128,7 @@ public class MusicService extends Service {
         notification.addAction(R.drawable.exit_icon, "Exit", exitPendingIntent);
         notification.build();
 
-        startForeground(13,  notification.build());
+        startForeground(13, notification.build());
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
             float playbackSpeed;
@@ -124,8 +150,8 @@ public class MusicService extends Service {
 
     }
 
-    public void createMediaPlayer(){
-        if(musicService.mediaPlayer == null) {
+    public void createMediaPlayer() {
+        if (musicService.mediaPlayer == null) {
             musicService.mediaPlayer = new MediaPlayer();
         }
         musicService.mediaPlayer.reset();
@@ -161,8 +187,6 @@ public class MusicService extends Service {
         };
         new Handler(Looper.getMainLooper()).postDelayed(runnable, 0);
     }
-
-
 
 
 }

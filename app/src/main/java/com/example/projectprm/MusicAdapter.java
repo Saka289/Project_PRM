@@ -1,4 +1,5 @@
 package com.example.projectprm;
+
 import static androidx.core.util.TimeUtils.formatDuration;
 
 import android.annotation.SuppressLint;
@@ -20,6 +21,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.example.projectprm.databinding.MusicViewBinding;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MyHolder> {
 
@@ -28,10 +30,11 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MyHolder> {
     private boolean playlistDetails;
     private boolean selectionActivity;
 
-    public MusicAdapter(Context context, ArrayList<Music> musicList, boolean playlistDetails) {
+    public MusicAdapter(Context context, ArrayList<Music> musicList, boolean playlistDetails, boolean selectionActivity) {
         this.context = context;
         this.musicList = musicList;
         this.playlistDetails = playlistDetails;
+        this.selectionActivity = selectionActivity;
 
     }
 
@@ -62,16 +65,16 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MyHolder> {
                 }
             });
         } else if (selectionActivity) {
-//            holder.root.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    if (addSong(musicList.get(position))) {
-//                        holder.root.setBackgroundColor(ContextCompat.getColor(context, R.color.cool_pink));
-//                    } else {
-//                        holder.root.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
-//                    }
-//                }
-//            });
+            holder.root.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (addSong(musicList.get(position))) {
+                        holder.root.setBackgroundColor(ContextCompat.getColor(context, R.color.cool_pink));
+                    } else {
+                        holder.root.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
+                    }
+                }
+            });
         } else {
             holder.root.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -126,7 +129,7 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MyHolder> {
         }
 
         public TextView getDuration() {
-            return   duration;
+            return duration;
         }
 
     }
@@ -137,11 +140,29 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MyHolder> {
         notifyDataSetChanged();
     }
 
-    private void sendIntent( String ref, int position) {
+    private void sendIntent(String ref, int position) {
         Intent intent = new Intent(context, PlayerActivity.class);
         intent.putExtra("index", position);
         intent.putExtra("class", ref);
         ContextCompat.startActivity(context, intent, null);
+    }
+
+    private boolean addSong(Music song) {
+        List<Music> playlist = PlaylistActivity.musicPlaylist.ref.get(PlaylistDetails.currentPlaylistPos).playlist;
+        for (int index = 0; index < playlist.size(); index++) {
+            if (song.getId() == playlist.get(index).getId()) {
+                playlist.remove(index);
+                return false;
+            }
+        }
+        playlist.add(song);
+        return true;
+    }
+
+    public void refreshPlaylist() {
+        musicList = new ArrayList<>();
+        musicList = PlaylistActivity.musicPlaylist.ref.get(PlaylistDetails.currentPlaylistPos).playlist;
+        notifyDataSetChanged();
     }
 }
 

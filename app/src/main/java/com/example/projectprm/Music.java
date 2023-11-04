@@ -7,7 +7,9 @@ import android.media.MediaMetadataRetriever;
 
 import androidx.recyclerview.widget.SortedList;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -18,7 +20,6 @@ public class Music {
     private String artist;
     private Long duration;
     private String path;
-
     private String artUri;
 
     public Music() {
@@ -137,6 +138,7 @@ public class Music {
 
     public static void exitApplication(){
         if(PlayerActivity.musicService != null) {
+            PlayerActivity.musicService.audioManager.abandonAudioFocus(PlayerActivity.musicService);
             PlayerActivity.musicService.stopForeground(true);
             PlayerActivity.musicService.mediaPlayer.release();
             PlayerActivity.musicService = null;
@@ -154,5 +156,16 @@ public class Music {
             }
         }
         return -1;
+    }
+    public static ArrayList<Music> checkPlaylist(ArrayList<Music> playlist) {
+        Iterator<Music> iterator = playlist.iterator();
+        while (iterator.hasNext()) {
+            Music music = iterator.next();
+            File file = new File(music.getPath());
+            if (!file.exists()) {
+                iterator.remove();
+            }
+        }
+        return playlist;
     }
 }
