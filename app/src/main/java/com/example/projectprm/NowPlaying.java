@@ -7,6 +7,7 @@ import static com.example.projectprm.PlayerActivity.playerBinding;
 import static com.example.projectprm.PlayerActivity.songPosition;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.core.content.ContextCompat;
@@ -28,6 +29,10 @@ public class NowPlaying extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            requireContext().getTheme().applyStyle(MainActivity.currentTheme[MainActivity.themeIndex], true);
+        }
+
         View view = inflater.inflate(R.layout.fragment_now_playing, container, false);
         binding = FragmentNowPlayingBinding.bind(view);
         binding.getRoot().setVisibility(View.INVISIBLE);
@@ -46,10 +51,10 @@ public class NowPlaying extends Fragment {
                 musicService.createMediaPlayer();
                 playerBinding.songNamePA.setText(musicListPA.get(songPosition).getTitle());
                 Glide.with(NowPlaying.this)
-                        .load(PlayerActivity.musicListPA.get(PlayerActivity.songPosition).getArtUri())
+                        .load(musicListPA.get(songPosition).getArtUri())
                         .apply(new RequestOptions().placeholder(R.drawable.music_player_icon_slash_screen).centerCrop())
                         .into(NowPlaying.binding.songImgNP);
-                NowPlaying.binding.songNameNP.setText(PlayerActivity.musicListPA.get(PlayerActivity.songPosition).getTitle());
+                NowPlaying.binding.songNameNP.setText(musicListPA.get(songPosition).getTitle());
                 musicService.showNotification(R.drawable.pause_icon);
                 playMusic();
             }
@@ -58,7 +63,7 @@ public class NowPlaying extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(requireContext(), PlayerActivity.class);
-                intent.putExtra("index", PlayerActivity.songPosition);
+                intent.putExtra("index", songPosition);
                 intent.putExtra("class", "NowPlaying");
                 ContextCompat.startActivity(requireContext(), intent, null);
             }

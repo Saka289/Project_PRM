@@ -1,5 +1,6 @@
 package com.example.projectprm;
 
+import android.os.Build;
 import static com.example.projectprm.Music.checkPlaylist;
 
 import android.content.Intent;
@@ -22,7 +23,9 @@ public class FavouriteActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTheme(R.style.coolPink);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            setTheme(MainActivity.currentThemeNav[MainActivity.themeIndex]);
+        }
         favouriteBinding = ActivityFavouriteBinding.inflate(getLayoutInflater());
         setContentView(favouriteBinding.getRoot());
         favouriteSongs = checkPlaylist(favouriteSongs);

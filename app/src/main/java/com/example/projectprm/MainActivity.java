@@ -45,6 +45,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+
     private ActivityMainBinding mainBinding;
     private ActionBarDrawerToggle toggle;
 
@@ -54,18 +55,32 @@ public class MainActivity extends AppCompatActivity {
 
     int[] currentGradient = {R.drawable.gradient_pink, R.drawable.gradient_blue, R.drawable.gradient_purple, R.drawable.gradient_green, R.drawable.gradient_black};
 
-    int themeIndex = 0;
-    int[] currentTheme = {R.style.coolPink, R.style.coolBlue, R.style.coolPurple, R.style.coolGreen, R.style.coolBlack};
-    int[] currentThemeNav = {R.style.coolPinkNav, R.style.coolBlueNav, R.style.coolPurpleNav, R.style.coolGreenNav, R.style.coolBlackNav};
+    static int themeIndex = 0;
+    static int[] currentTheme = {R.style.coolPink, R.style.coolBlue, R.style.coolPurple, R.style.coolGreen, R.style.coolBlack};
+    static int[] currentThemeNav = {R.style.coolPinkNav, R.style.coolBlueNav, R.style.coolPurpleNav, R.style.coolGreenNav, R.style.coolBlackNav};
     public static ArrayList<Music> musicListSearch;
 
     public static boolean search = false;
+
+    public static int sortOrder = 0;
+
+    String[] sortingList = {
+            MediaStore.Audio.Media.DATE_ADDED + " DESC",
+            MediaStore.Audio.Media.TITLE,
+            MediaStore.Audio.Media.SIZE + " DESC"
+    };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setTheme(R.style.coolPinkNav);
+        // Lấy giá trị themeIndex từ SharedPreferences
+        SharedPreferences themeEditor = getSharedPreferences("THEMES", MODE_PRIVATE);
+        int themeIndex = themeEditor.getInt("themeIndex", 0);
+
+
+        setTheme(currentThemeNav[themeIndex]);
         mainBinding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(mainBinding.getRoot());
 
@@ -122,12 +137,18 @@ public class MainActivity extends AppCompatActivity {
                 if (item.getItemId() == R.id.navFeedback) {
                     Toast.makeText(getApplicationContext(), "Feedback", Toast.LENGTH_SHORT).show();
                 }
+
+                // Chuyển sang SettingsActivity khi nhấn vào R.id.navSettings
                 if (item.getItemId() == R.id.navSettings) {
-                    Toast.makeText(getApplicationContext(), "Settings", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+                    startActivity(intent);
                 }
+                // Chuyển sang AboutActivity khi nhấn vào R.id.navAbout
                 if (item.getItemId() == R.id.navAbout) {
-                    Toast.makeText(getApplicationContext(), "About", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(MainActivity.this, AboutActivity.class);
+                    startActivity(intent);
                 }
+
                 if (item.getItemId() == R.id.navExit) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                     builder.setTitle("Exit")
@@ -187,6 +208,11 @@ public class MainActivity extends AppCompatActivity {
     private void initializeLayout() {
         MusicListMA = getAllAudio();
 
+        search = false;
+        SharedPreferences sortEditor = getSharedPreferences("SORTING", MODE_PRIVATE);
+        sortOrder = sortEditor.getInt("sortOrder", 0);
+
+
         mainBinding.musicRV.setHasFixedSize(true);
         mainBinding.musicRV.setItemViewCacheSize(13);
         mainBinding.musicRV.setLayoutManager(new LinearLayoutManager(this));
@@ -214,7 +240,8 @@ public class MainActivity extends AppCompatActivity {
                 projection,
                 selection,
                 null,
-                MediaStore.Audio.Media.DATE_ADDED + " DESC",
+                //MediaStore.Audio.Media.DATE_ADDED + " DESC",
+                sortingList[sortOrder],
                 null
         );
         if (cursor != null) {
@@ -259,6 +286,25 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        //for storing favorites data using shared preferences
+        SharedPreferences.Editor editor = getSharedPreferences("FAVOURITES", MODE_PRIVATE).edit();
+        String jsonString = new Gson().toJson(FavouriteActivity.favouriteSongs);
+        editor.putString("FavouriteSongs", jsonString);
+        String jsonStringPlaylist = new Gson().toJson(PlaylistActivity.musicPlaylist);
+        editor.putString("MusicPlaylist", jsonStringPlaylist);
+        editor.apply();
+
+
+        //for sorting
+        SharedPreferences sortEditor = getSharedPreferences("SORTING", MODE_PRIVATE);
+        int sortValue = sortEditor.getInt("sortOrder", 0);
+        if (sortOrder != sortValue) {
+            sortOrder = sortValue;
+            MusicListMA = getAllAudio();
+            musicAdapter.updateMusicList(MusicListMA);
+        }
+    }
+
         SharedPreferences.Editor editor = getSharedPreferences("FAVOURITES", MODE_PRIVATE).edit();
         GsonBuilder gsonBuilder = new GsonBuilder();
         String jsonString = gsonBuilder.create().toJson(FavouriteActivity.favouriteSongs);
@@ -267,7 +313,6 @@ public class MainActivity extends AppCompatActivity {
         editor.putString("MusicPlaylist", jsonStringPlaylist);
         editor.apply();
     }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.search_view_menu, menu);

@@ -62,8 +62,11 @@ public class PlayerActivity extends AppCompatActivity implements ServiceConnecti
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            setTheme(MainActivity.currentThemeNav[MainActivity.themeIndex]);
+        }
+
         playerBinding = ActivityPlayerBinding.inflate(getLayoutInflater());
-        setTheme(R.style.coolPink);
         setContentView(playerBinding.getRoot());
         Intent intent = new Intent(this, MusicService.class);
         bindService(intent,this,BIND_AUTO_CREATE);

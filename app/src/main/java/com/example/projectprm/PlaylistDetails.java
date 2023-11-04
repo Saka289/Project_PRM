@@ -32,7 +32,9 @@ public class PlaylistDetails extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityPlaylistDetailsBinding.inflate(getLayoutInflater());
-        setTheme(R.style.coolPink);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            setTheme(MainActivity.currentThemeNav[MainActivity.themeIndex]);
+        }
         setContentView(binding.getRoot());
         currentPlaylistPos = getIntent().getIntExtra("index", -1);
         PlaylistActivity.musicPlaylist.ref.get(currentPlaylistPos).playlist = checkPlaylist(PlaylistActivity.musicPlaylist.ref.get(currentPlaylistPos).playlist);

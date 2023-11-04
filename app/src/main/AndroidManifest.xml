@@ -22,10 +22,13 @@
         android:theme="@style/splash_screen"
         tools:targetApi="31">
         <activity
-            android:name=".SelectionActivity"
-            android:exported="false"
+            android:name=".AboutActivity"
             android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity"/>
+            tools:ignore="LockedOrientationActivity" />
+        <activity
+            android:name=".SettingsActivity"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".PlaylistDetails"
             android:exported="false"

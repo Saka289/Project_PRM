@@ -1,5 +1,8 @@
 package com.example.projectprm;
 
+import android.os.Bundle;
+
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -7,18 +10,16 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
-
 import com.example.projectprm.databinding.ActivitySelectionBinding;
-
 import java.util.ArrayList;
 
 public class SelectionActivity extends AppCompatActivity {
     private ActivitySelectionBinding binding;
     private MusicAdapter adapter;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+  
         binding = ActivitySelectionBinding.inflate(getLayoutInflater());
         setTheme(R.style.coolPink);
         setContentView(binding.getRoot());
