@@ -77,7 +77,6 @@ public class SettingsActivity extends AppCompatActivity {
                         currentSort[0] = which;
                     });
 
-
             AlertDialog customDialog = builder.create();
             customDialog.show();
 

@@ -30,6 +30,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.projectprm.databinding.ActivityMainBinding;
 import com.google.android.material.navigation.NavigationView;
+import com.google.gson.Gson;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -38,7 +39,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static int sortOrder = 0;
+
     private ActivityMainBinding mainBinding;
     private ActionBarDrawerToggle toggle;
 
@@ -54,6 +55,16 @@ public class MainActivity extends AppCompatActivity {
     public static ArrayList<Music> musicListSearch;
 
     public static boolean search = false;
+
+    public static int sortOrder = 0;
+
+    String[] sortingList = {
+            MediaStore.Audio.Media.DATE_ADDED + " DESC",
+            MediaStore.Audio.Media.TITLE,
+            MediaStore.Audio.Media.SIZE + " DESC"
+    };
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -177,6 +188,11 @@ public class MainActivity extends AppCompatActivity {
     private void initializeLayout(){
         MusicListMA = getAllAudio();
 
+        search = false;
+        SharedPreferences sortEditor = getSharedPreferences("SORTING", MODE_PRIVATE);
+        sortOrder = sortEditor.getInt("sortOrder", 0);
+
+
         mainBinding.musicRV.setHasFixedSize(true);
         mainBinding.musicRV.setItemViewCacheSize(13);
         mainBinding.musicRV.setLayoutManager(new LinearLayoutManager(this));
@@ -204,7 +220,8 @@ public class MainActivity extends AppCompatActivity {
                 projection,
                 selection,
                 null,
-                MediaStore.Audio.Media.DATE_ADDED + " DESC",
+                //MediaStore.Audio.Media.DATE_ADDED + " DESC",
+                sortingList[sortOrder],
                 null
         );
         if(cursor != null) {
@@ -245,6 +262,31 @@ public class MainActivity extends AppCompatActivity {
             Music.exitApplication();
         }
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //for storing favorites data using shared preferences
+        SharedPreferences.Editor editor = getSharedPreferences("FAVOURITES", MODE_PRIVATE).edit();
+        String jsonString = new Gson().toJson(FavouriteActivity.favouriteSongs);
+        editor.putString("FavouriteSongs", jsonString);
+        String jsonStringPlaylist = new Gson().toJson(PlaylistActivity.musicPlaylist);
+        editor.putString("MusicPlaylist", jsonStringPlaylist);
+        editor.apply();
+
+
+        //for sorting
+        SharedPreferences sortEditor = getSharedPreferences("SORTING", MODE_PRIVATE);
+        int sortValue = sortEditor.getInt("sortOrder", 0);
+        if (sortOrder != sortValue) {
+            sortOrder = sortValue;
+            MusicListMA = getAllAudio();
+            musicAdapter.updateMusicList(MusicListMA);
+        }
+    }
+
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
