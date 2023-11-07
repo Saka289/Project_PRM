@@ -315,8 +315,10 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.search_view_menu, menu);
 
         // For setting gradient
+/*
         LinearLayout linearLayoutNav = findViewById(R.id.linearLayoutNav);
         linearLayoutNav.setBackgroundResource(currentGradient[themeIndex]);
+*/
 
         MenuItem searchMenuItem = menu.findItem(R.id.searchView);
         SearchView searchView = (SearchView) searchMenuItem.getActionView();

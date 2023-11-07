@@ -85,6 +85,16 @@
             android:tint="@color/cool_pink"
             android:padding="5dp"/>
     </LinearLayout>
+<!--
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/switchMode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:text="Switch Mode"
+        android:padding="16dp"/>
+-->
 
     <TextView
         android:id="@+id/versionName"

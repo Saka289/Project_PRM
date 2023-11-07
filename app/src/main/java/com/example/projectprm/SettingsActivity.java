@@ -2,6 +2,7 @@ package com.example.projectprm;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -9,6 +10,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.widget.CompoundButton;
 
 import com.example.projectprm.databinding.ActivitySettingsBinding;
 import com.google.android.material.color.MaterialColors;
@@ -18,6 +20,8 @@ import com.google.gson.internal.GsonBuildConfig;
 public class SettingsActivity extends AppCompatActivity {
 
     private ActivitySettingsBinding binding;
+
+   // private SwitchCompat switchMode;
 
 
     @Override
@@ -31,6 +35,24 @@ public class SettingsActivity extends AppCompatActivity {
         binding = ActivitySettingsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         getSupportActionBar().setTitle("Settings");
+     //   switchMode = findViewById(R.id.switchMode);
+
+/*
+        switchMode.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    // Xử lý khi người dùng bật switch
+                    switchMode.setBackgroundColor(Color.GREEN);
+                } else {
+                    // Xử lý khi người dùng tắt switch
+                    switchMode.setBackgroundColor(Color.RED);
+                }
+            }
+        });
+*/
+
+
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             switch (MainActivity.themeIndex) {

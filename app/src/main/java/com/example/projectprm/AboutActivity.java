@@ -24,7 +24,15 @@ public class AboutActivity extends AppCompatActivity {
     }
 
     private String aboutText() {
-        return "This music app was developed by Nam, Linh, Giang, Nhân" +
-                "\n\nIf you want to provide feedback, we would love to hear from you.";
+        return "App Nghe nhạc này được phát triển bởi 5 thành viên : Lê Hoài Nam, Nguyễn Hải Nam, Mai Ngọc Giang, Nguyễn Tuấn Linh, Đoàn Trọng Nhân" +
+                "\n\nApp này có một số tính năng sau :"
+                + "\n Tải nhạc lên từ file"
+                + "\n Nghe nhạc"
+                + "\n Thêm vào danh sách phát"
+                + "\n Thêm vào mục ưa thích"
+                + "\n Cài đặt thời gian nghe nhạc"
+                + "\n Sắp xếp nhạc theo tiêu đề và thời gian"
+                + "\n Thay đổi màu nền app"
+                ;
     }
 }

@@ -64,6 +64,7 @@
             android:textColor="@color/black"
             android:layout_margin="10dp"/>
 
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/musicRV"
             android:layout_width="match_parent"
@@ -71,6 +72,7 @@
             android:scrollbars="vertical"
             android:scrollbarThumbVertical="@drawable/scroll_bar_icon"
             />
+
 
     </LinearLayout>
 

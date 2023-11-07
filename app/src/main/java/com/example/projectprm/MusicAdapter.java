@@ -79,12 +79,14 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MyHolder> {
             holder.root.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (MainActivity.search) {
-                        sendIntent("MusicAdapterSearch", position);
-                    } else if (musicList.get(position).getId() == PlayerActivity.nowPlayingId) {
-                        sendIntent("NowPlaying", PlayerActivity.songPosition);
-                    } else {
-                        sendIntent("MusicAdapter", position);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                        if (MainActivity.search) {
+                            sendIntent("MusicAdapterSearch", position);
+                        } else if (musicList.get(position).getId() == PlayerActivity.nowPlayingId) {
+                            sendIntent("NowPlaying", PlayerActivity.songPosition);
+                        } else {
+                            sendIntent("MusicAdapter", position);
+                        }
                     }
                 }
             });
