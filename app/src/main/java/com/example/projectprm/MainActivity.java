@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
 
     int[] currentGradient = {R.drawable.gradient_pink, R.drawable.gradient_blue, R.drawable.gradient_purple, R.drawable.gradient_green, R.drawable.gradient_black};
 
-     static int themeIndex = 4;
+     static int themeIndex = 0;
     static int[] currentTheme = {R.style.coolPink, R.style.coolBlue, R.style.coolPurple, R.style.coolGreen, R.style.coolBlack};
     static int[] currentThemeNav = {R.style.coolPinkNav, R.style.coolBlueNav, R.style.coolPurpleNav, R.style.coolGreenNav, R.style.coolBlackNav};
     public static ArrayList<Music> musicListSearch;
@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Lấy giá trị themeIndex từ SharedPreferences
         SharedPreferences themeEditor = getSharedPreferences("THEMES", MODE_PRIVATE);
-        int themeIndex = themeEditor.getInt("themeIndex", 0);
+         themeIndex = themeEditor.getInt("themeIndex", 0);
 
         setTheme(currentThemeNav[themeIndex]);
 
@@ -315,10 +315,8 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.search_view_menu, menu);
 
         // For setting gradient
-/*
         LinearLayout linearLayoutNav = findViewById(R.id.linearLayoutNav);
         linearLayoutNav.setBackgroundResource(currentGradient[themeIndex]);
-*/
 
         MenuItem searchMenuItem = menu.findItem(R.id.searchView);
         SearchView searchView = (SearchView) searchMenuItem.getActionView();

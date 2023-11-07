@@ -35,22 +35,6 @@ public class SettingsActivity extends AppCompatActivity {
         binding = ActivitySettingsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         getSupportActionBar().setTitle("Settings");
-     //   switchMode = findViewById(R.id.switchMode);
-
-/*
-        switchMode.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    // Xử lý khi người dùng bật switch
-                    switchMode.setBackgroundColor(Color.GREEN);
-                } else {
-                    // Xử lý khi người dùng tắt switch
-                    switchMode.setBackgroundColor(Color.RED);
-                }
-            }
-        });
-*/
 
 
 
@@ -119,18 +103,8 @@ public class SettingsActivity extends AppCompatActivity {
                 MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
                 builder.setTitle("Apply Theme")
                         .setMessage("Do you want to apply theme?")
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Music.exitApplication();
-                            }
-                        })
-                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        });
+                        .setPositiveButton("Yes", (dialog, which) -> Music.exitApplication())
+                        .setNegativeButton("No", (dialog, which) -> dialog.dismiss());
 
 
                 AlertDialog customDialog = builder.create();

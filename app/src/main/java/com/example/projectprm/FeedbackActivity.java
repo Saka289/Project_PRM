@@ -3,6 +3,7 @@ package com.example.projectprm;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -19,7 +20,9 @@ public class FeedbackActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_feedback);
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            setTheme(MainActivity.currentThemeNav[MainActivity.themeIndex]);
+        }
        button = findViewById(R.id.btnSend);
         editTextSubject = findViewById(R.id.subject);
         editTextContent = findViewById(R.id.content);

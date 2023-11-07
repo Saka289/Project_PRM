@@ -112,7 +112,7 @@
     </style>
 
     <style name="coolBlackNav" parent="Theme.MaterialComponents.Light">
-        <item name="themeColor">@color/cool_green</item>
+        <item name="themeColor">@color/black</item>
         <item name="colorPrimary">@color/white</item>
         <item name="colorPrimaryVariant">@color/black</item>
         <item name="colorOnPrimary">@color/black</item>
