@@ -26,7 +26,7 @@ import androidx.core.app.NotificationCompat;
 
 import java.io.IOException;
 
-public class MusicService extends Service implements AudioManager.OnAudioFocusChangeListener {
+public class MusicService extends Service  {
 
     public MyBinder myBinder = new MyBinder();
     public MediaPlayer mediaPlayer = null;
@@ -41,22 +41,22 @@ public class MusicService extends Service implements AudioManager.OnAudioFocusCh
         return myBinder;
     }
 
-    @Override
-    public void onAudioFocusChange(int focusChange) {
-        if (focusChange <= 0) {
-            PlayerActivity.playerBinding.playPauseBtnPA.setIconResource(R.drawable.play_icon);
-            NowPlaying.binding.playPauseBtnNP.setIconResource(R.drawable.play_icon);
-            showNotification(R.drawable.play_icon);
-            PlayerActivity.isPlaying = false;
-            musicService.mediaPlayer.pause();
-        } else {
-            PlayerActivity.playerBinding.playPauseBtnPA.setIconResource(R.drawable.pause_icon);
-            NowPlaying.binding.playPauseBtnNP.setIconResource(R.drawable.pause_icon);
-            showNotification(R.drawable.pause_icon);
-            PlayerActivity.isPlaying = true;
-            mediaPlayer.start();
-        }
-    }
+//    @Override
+//    public void onAudioFocusChange(int focusChange) {
+//        if (focusChange <= 0) {
+//            PlayerActivity.playerBinding.playPauseBtnPA.setIconResource(R.drawable.play_icon);
+//            NowPlaying.binding.playPauseBtnNP.setIconResource(R.drawable.play_icon);
+//            showNotification(R.drawable.play_icon);
+//            PlayerActivity.isPlaying = false;
+//            musicService.mediaPlayer.pause();
+//        } else {
+//            PlayerActivity.playerBinding.playPauseBtnPA.setIconResource(R.drawable.pause_icon);
+//            NowPlaying.binding.playPauseBtnNP.setIconResource(R.drawable.pause_icon);
+//            showNotification(R.drawable.pause_icon);
+//            PlayerActivity.isPlaying = true;
+//            mediaPlayer.start();
+//        }
+//    }
 
     public class MyBinder extends Binder {
         public MusicService currentService() {

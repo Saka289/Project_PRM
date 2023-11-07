@@ -367,8 +367,8 @@ public class PlayerActivity extends AppCompatActivity implements ServiceConnecti
         musicService = binder.currentService();
         createMediaPlayer();
         musicService.seekBarSetup();
-        musicService.audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-        musicService.audioManager.requestAudioFocus(musicService, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+//        musicService.audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+//        musicService.audioManager.requestAudioFocus(musicService, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
 
     }
 
