@@ -1,7 +1,9 @@
 package com.example.projectprm;
 
+import static com.example.projectprm.Music.exitApplication;
 import static com.example.projectprm.Music.favouriteChecker;
 import static com.example.projectprm.Music.formatDuration;
+import static com.example.projectprm.Music.getImgArt;
 import static com.example.projectprm.Music.setSongPosition;
 
 import android.app.Dialog;
@@ -10,6 +12,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.database.Cursor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.audiofx.AudioEffect;
@@ -17,6 +20,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.SeekBar;
 import android.widget.Toast;
@@ -66,10 +70,28 @@ public class PlayerActivity extends AppCompatActivity implements ServiceConnecti
 
         playerBinding = ActivityPlayerBinding.inflate(getLayoutInflater());
         setContentView(playerBinding.getRoot());
+
         Intent intent = new Intent(this, MusicService.class);
-        bindService(intent,this,BIND_AUTO_CREATE);
-        startService(intent);
-        initializeLayout();
+
+        if (intent.getData() != null && "content".equals(intent.getData().getScheme())) {
+            // Xử lý Intent khi chứa dữ liệu và có scheme "content"
+            songPosition = 0;
+            Intent intentService = new Intent(this, MusicService.class);
+            bindService(intentService, this, BIND_AUTO_CREATE);
+            startService(intentService);
+            musicListPA = new ArrayList<>();
+            musicListPA.add(getMusicDetails(intent.getData()));
+            Glide.with(this)
+                    .load(getImgArt(musicListPA.get(songPosition).getPath()))
+                    .apply(new RequestOptions().placeholder(R.drawable.music_player_icon_slash_screen).centerCrop())
+                    .into(playerBinding.songImgPA);
+            playerBinding.songNamePA.setText(musicListPA.get(songPosition).getTitle());
+        } else {
+            // Xử lý Intent khi không chứa dữ liệu hoặc không có scheme "content"
+            initializeLayout();
+        }
+
+
         playerBinding.backBtnPA.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -211,6 +233,37 @@ public class PlayerActivity extends AppCompatActivity implements ServiceConnecti
             }
         });
     }
+
+    private Music getMusicDetails(Uri contentUri) {
+        Cursor cursor = null;
+        try {
+            String[] projection = {MediaStore.Audio.Media.DATA, MediaStore.Audio.Media.DURATION};
+            cursor = this.getContentResolver().query(contentUri, projection, null, null, null);
+            if (cursor != null && cursor.moveToFirst()) {
+                int dataColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA);
+                int durationColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION);
+                String path = cursor.getString(dataColumnIndex);
+                long duration = cursor.getLong(durationColumnIndex);
+                return new Music("Unknown", path, "Unknown", "Unknown", duration, "Unknown", path);
+            }
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        // Trả về một giá trị mặc định hoặc xử lý thích hợp nếu không có dữ liệu hợp lệ.
+        return new Music("Unknown", "Unknown", "Unknown", "Unknown", 0L, "Unknown", "Unknown");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (musicListPA.get(songPosition).getId().equals("Unknown") && !isPlaying) {
+            exitApplication();
+        }
+    }
+
+
 
     private void setLayout(){
         fIndex = favouriteChecker(musicListPA.get(songPosition).getId());
@@ -413,7 +466,7 @@ public class PlayerActivity extends AppCompatActivity implements ServiceConnecti
                         try {
                             Thread.sleep(15 * 60000);
                             if (min15) {
-                                Music.exitApplication();
+                                exitApplication();
                             }
                         } catch (InterruptedException e) {
                             e.printStackTrace();
@@ -436,7 +489,7 @@ public class PlayerActivity extends AppCompatActivity implements ServiceConnecti
                         try {
                             Thread.sleep(30 * 60000);
                             if (min30) {
-                                Music.exitApplication();
+                                exitApplication();
                             }
                         } catch (InterruptedException e) {
                             e.printStackTrace();
@@ -459,7 +512,7 @@ public class PlayerActivity extends AppCompatActivity implements ServiceConnecti
                         try {
                             Thread.sleep(60 * 60000);
                             if (min60) {
-                                Music.exitApplication();
+                                exitApplication();
                             }
                         } catch (InterruptedException e) {
                             e.printStackTrace();
