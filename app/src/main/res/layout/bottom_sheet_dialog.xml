@@ -16,13 +16,13 @@
             android:layout_height="24dp"
             android:src="@drawable/timer_icon"
             app:tint="@color/cool_pink"
-            android:contentDescription="@string/min_30"
+            android:contentDescription="@string/min_15"
             android:layout_margin="8dp"/>
         
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="@string/min_30"
+            android:text="@string/min_15"
             android:textSize="18sp"
             android:textColor="@color/black"
             android:padding="8dp" />

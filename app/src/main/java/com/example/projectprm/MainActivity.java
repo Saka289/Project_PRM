@@ -16,10 +16,12 @@ import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import androidx.appcompat.widget.SearchView;
 
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -31,8 +33,17 @@ import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 
+import com.bumptech.glide.Glide;
 import com.example.projectprm.databinding.ActivityMainBinding;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -56,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
 
     int[] currentGradient = {R.drawable.gradient_pink, R.drawable.gradient_blue, R.drawable.gradient_purple, R.drawable.gradient_green, R.drawable.gradient_black};
 
-     static int themeIndex = 0;
+    static int themeIndex = 0;
     static int[] currentTheme = {R.style.coolPink, R.style.coolBlue, R.style.coolPurple, R.style.coolGreen, R.style.coolBlack};
     static int[] currentThemeNav = {R.style.coolPinkNav, R.style.coolBlueNav, R.style.coolPurpleNav, R.style.coolGreenNav, R.style.coolBlackNav};
     public static ArrayList<Music> musicListSearch;
@@ -71,6 +82,13 @@ public class MainActivity extends AppCompatActivity {
             MediaStore.Audio.Media.SIZE + " DESC"
     };
 
+    GoogleSignInClient gClient;
+    GoogleSignInOptions gOptions;
+
+    FirebaseUser user;
+
+    FirebaseAuth auth;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,12 +96,40 @@ public class MainActivity extends AppCompatActivity {
 
         // Lấy giá trị themeIndex từ SharedPreferences
         SharedPreferences themeEditor = getSharedPreferences("THEMES", MODE_PRIVATE);
-         themeIndex = themeEditor.getInt("themeIndex", 0);
+        themeIndex = themeEditor.getInt("themeIndex", 0);
 
         setTheme(currentThemeNav[themeIndex]);
 
         mainBinding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(mainBinding.getRoot());
+        auth = FirebaseAuth.getInstance();
+
+        gOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
+        gClient = GoogleSignIn.getClient(this, gOptions);
+        user = auth.getCurrentUser();
+        GoogleSignInAccount gAccount = GoogleSignIn.getLastSignedInAccount(this);
+        if (gAccount != null) {
+            String gName = gAccount.getDisplayName();
+            Uri photoUrl = gAccount.getPhotoUrl();
+            NavigationView navigationView = (NavigationView) findViewById(R.id.navView);
+            View headerView = navigationView.getHeaderView(0);
+            TextView navUsername = (TextView) headerView.findViewById(R.id.login_name);
+            ImageView navImage = headerView.findViewById(R.id.login_image);
+            navUsername.setText(gName);
+            Glide.with(this).load(photoUrl).circleCrop().into(navImage);
+            navImage.invalidate();
+        }
+        if (user != null ) {
+            NavigationView navigationView = (NavigationView) findViewById(R.id.navView);
+            View headerView = navigationView.getHeaderView(0);
+            TextView navUsername = (TextView) headerView.findViewById(R.id.login_name);
+            String name = user.getEmail();
+            String[] parts = name.split("@");
+            String username = parts[0];
+            navUsername.setText(username);
+        }
+
+
         if (themeIndex == 4 && (getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_NO) {
             Toast.makeText(this, "Black Theme Works Best in Dark Mode!!", Toast.LENGTH_LONG).show();
         }
@@ -176,6 +222,22 @@ public class MainActivity extends AppCompatActivity {
 
 
                     // Add your exit confirmation logic here
+                }
+                if (item.getItemId() == R.id.nagLogOut) {
+                    user = auth.getCurrentUser();
+                    if (user != null) {
+                        FirebaseAuth.getInstance().signOut();
+                        startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                        finish();
+                    } else {
+                        gClient.signOut().addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                finish();
+                                startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                            }
+                        });
+                    }
                 }
                 return true;
             }
@@ -310,6 +372,7 @@ public class MainActivity extends AppCompatActivity {
             musicAdapter.updateMusicList(MusicListMA);
         }
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.search_view_menu, menu);
