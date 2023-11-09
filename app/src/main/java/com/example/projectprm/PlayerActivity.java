@@ -157,7 +157,7 @@ public class PlayerActivity extends AppCompatActivity implements ServiceConnecti
             public void onClick(View v) {
                 try {
                     Intent EqIntent = new Intent(AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL);
-                    EqIntent.setAction(AudioEffect.EXTRA_AUDIO_SESSION);
+                    EqIntent.putExtra(AudioEffect.EXTRA_AUDIO_SESSION, musicService.mediaPlayer.getAudioSessionId());
                     EqIntent.putExtra(AudioEffect.EXTRA_PACKAGE_NAME, getBaseContext().getPackageName());
                     EqIntent.putExtra(AudioEffect.EXTRA_CONTENT_TYPE, AudioEffect.CONTENT_TYPE_MUSIC);
                     startActivityForResult(EqIntent, 13);

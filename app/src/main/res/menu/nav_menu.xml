@@ -17,6 +17,11 @@
         android:title="@string/about" />
 
     <item
+        android:id="@+id/nagLogOut"
+        android:icon="@drawable/exit_icon"
+        android:title="@string/logout" />
+
+    <item
         android:id="@+id/navExit"
         android:icon="@drawable/exit_icon"
         android:title="@string/exit" />
