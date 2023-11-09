@@ -1,7 +1,14 @@
 package com.example.projectprm;
 
+import static com.example.projectprm.Music.getImgArt;
+import static com.example.projectprm.PlayerActivity.musicListPA;
+import static com.example.projectprm.PlayerActivity.musicService;
+import static com.example.projectprm.PlayerActivity.songPosition;
+
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,10 +68,20 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.MyHo
     @Override
     public void onBindViewHolder(MyHolder holder, int position) {
         holder.name.setText(musicList.get(position).getTitle());
-        Glide.with(context)
+        /*Glide.with(context)
                 .load(musicList.get(position).getArtUri())
                 .apply(RequestOptions.placeholderOf(R.drawable.music_player_icon_slash_screen).centerCrop())
-                .into(holder.image);
+                .into(holder.image);*/
+
+        byte[] imgArt = getImgArt(musicList.get(position).getPath());
+        Bitmap image;
+        if (imgArt != null) {
+            image = BitmapFactory.decodeByteArray(imgArt, 0, imgArt.length);
+        } else {
+            image = BitmapFactory.decodeResource(musicService.getResources(), R.drawable.music_player_icon_slash_screen);
+        }
+
+        holder.image.setImageBitmap(image);
     }
 
 
