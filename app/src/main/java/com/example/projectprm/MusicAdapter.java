@@ -2,9 +2,14 @@ package com.example.projectprm;
 
 import static androidx.core.util.TimeUtils.formatDuration;
 
+import static com.example.projectprm.Music.getImgArt;
+import static com.example.projectprm.PlayerActivity.musicService;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.hardware.usb.UsbEndpoint;
 import android.os.Build;
 import android.view.LayoutInflater;
@@ -51,11 +56,19 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MyHolder> {
         holder.album.setText(musicList.get(position).getAlbum());
         holder.duration.setText(Music.formatDuration(musicList.get(position).getDuration()));
 
-        Glide.with(context)
+        /*Glide.with(context)
                 .load(musicList.get(position).getArtUri())
                 .apply(RequestOptions.placeholderOf(R.drawable.music_player_icon_slash_screen).centerCrop())
-                .into(holder.image);
+                .into(holder.image);*/
 
+        byte[] imgArt = getImgArt(musicList.get(position).getPath());
+        Bitmap image;
+        if (imgArt != null) {
+            image = BitmapFactory.decodeByteArray(imgArt, 0, imgArt.length);
+        } else {
+            image = BitmapFactory.decodeResource(musicService.getResources(), R.drawable.music_player_icon_slash_screen);
+        }
+        holder.image.setImageBitmap(image);
 
         if (playlistDetails) {
             holder.root.setOnClickListener(new View.OnClickListener() {

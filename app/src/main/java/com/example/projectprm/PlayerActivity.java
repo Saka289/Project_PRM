@@ -13,6 +13,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.audiofx.AudioEffect;
@@ -81,11 +83,21 @@ public class PlayerActivity extends AppCompatActivity implements ServiceConnecti
             startService(intentService);
             musicListPA = new ArrayList<>();
             musicListPA.add(getMusicDetails(intent.getData()));
-            Glide.with(this)
+            /*Glide.with(this)
                     .load(getImgArt(musicListPA.get(songPosition).getPath()))
                     .apply(new RequestOptions().placeholder(R.drawable.music_player_icon_slash_screen).centerCrop())
-                    .into(playerBinding.songImgPA);
+                    .into(playerBinding.songImgPA);*/
             playerBinding.songNamePA.setText(musicListPA.get(songPosition).getTitle());
+
+            byte[] imgArt = getImgArt(musicListPA.get(songPosition).getPath());
+            Bitmap image;
+            if (imgArt != null) {
+                image = BitmapFactory.decodeByteArray(imgArt, 0, imgArt.length);
+            } else {
+                image = BitmapFactory.decodeResource(musicService.getResources(), R.drawable.music_player_icon_slash_screen);
+            }
+            playerBinding.songImgPA.setImageBitmap(image);
+
         } else {
             // Xử lý Intent khi không chứa dữ liệu hoặc không có scheme "content"
             initializeLayout();
@@ -267,10 +279,18 @@ public class PlayerActivity extends AppCompatActivity implements ServiceConnecti
 
     private void setLayout(){
         fIndex = favouriteChecker(musicListPA.get(songPosition).getId());
-        Glide.with(this)
+        /*Glide.with(this)
                 .load(musicListPA.get(songPosition).getArtUri())
                 .apply(RequestOptions.placeholderOf(R.drawable.music_player_icon_slash_screen).centerCrop())
-                .into(playerBinding.songImgPA);
+                .into(playerBinding.songImgPA);*/
+        byte[] imgArt = getImgArt(musicListPA.get(songPosition).getPath());
+        Bitmap image;
+        if (imgArt != null) {
+            image = BitmapFactory.decodeByteArray(imgArt, 0, imgArt.length);
+        } else {
+            image = BitmapFactory.decodeResource(musicService.getResources(), R.drawable.music_player_icon_slash_screen);
+        }
+        playerBinding.songImgPA.setImageBitmap(image);
         playerBinding.songNamePA.setText(musicListPA.get(songPosition).getTitle());
         if(repeat) playerBinding.repeatBtnPA.setColorFilter(ContextCompat.getColor(PlayerActivity.this, R.color.purple_500));
         if(min15 || min30 || min60) playerBinding.timerBtnPA.setColorFilter(ContextCompat.getColor(PlayerActivity.this, R.color.purple_500));
